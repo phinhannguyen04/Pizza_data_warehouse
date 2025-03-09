@@ -1,8 +1,24 @@
 import pandas as pd
 from sqlServerConnection import SqlServerConnection
 
+
+
+""" Tạo Staging Area và Data Warehouse
+    - B1 : tạo một csdl trong sql server
+    - B2 : lấy chuỗi kết noi tới sql server
+    - B3 : đọc file exel
+    - B4 : chuyển dữ liệu từ file excel vao dataframe
+    - B5 : tạo các bảng vơi các cột tương ứng trong dataframe
+    - B6 : thêm dữ liệu vào các bảng
+    - B7 : tạo FactSale Table kết nối với các bảng để lấy giá trị liên quan
+    - B8 : tính toán các giá trị trong fact table
+    - B9 : lấy gia tri tu bang fact table vao file output
+    - B10: xư ly du liệu 
+"""
+
+
 # connect to sql server
-db = SqlServerConnection("ODBC Driver 17 for SQL Server", ".\\SQLEXPRESS", "Pizza")
+db = SqlServerConnection("ODBC Driver 17 for SQL Server", ".\\SQLEXPRESS", "Demo")
 conn = db.connection()
 
 # read xlsx file
@@ -66,7 +82,7 @@ print(orders)
 """------------------------------------------------------------------------------------------------------------------"""
 print("order_details")
 
-order_detail_columns = ('order_details_id', 'details', 'quantity', 'total_price', 'pizza_id')
+order_detail_columns = ('order_details_id', 'details', 'quantity', 'total_price', 'pizza_id', 'order_id')
 order_details = db.import_data_to_dataframe(RAW_DATAFRAME=df, tuple_dataframe_columns=order_detail_columns, accept_null=True, column_accept_null='details')
 
 print(order_details.head())
@@ -76,10 +92,10 @@ print(order_details.head())
     Chuyển dữ liệu vào csdl
 """
 
-db.import_data(pizza_category, "pizza_categories")
-db.import_data(pizzas, "pizzas")
-db.import_data(orders, "orders")
-db.import_data(order_details, "order_details")
+db.import_data_to_sql(pizza_category, "pizza_categories")
+db.import_data_to_sql(pizzas, "pizzas")
+db.import_data_to_sql(orders, "orders")
+db.import_data_to_sql(order_details, "order_details")
 
 # import csv
 #
